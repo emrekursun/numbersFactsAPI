@@ -1,2 +1,0 @@
-# numbersFactsAPI
-Werkstuk development V
