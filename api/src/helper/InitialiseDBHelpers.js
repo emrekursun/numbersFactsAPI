@@ -1,4 +1,4 @@
-
+/*
 const func = {
   initialiseTables: async function (db) {
     await db.schema.hasTable('numbers').then(async (exists) => {
@@ -47,3 +47,4 @@ const func = {
 }
 
 module.exports = func
+*/
