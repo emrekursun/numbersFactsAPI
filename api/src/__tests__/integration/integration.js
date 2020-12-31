@@ -3,6 +3,8 @@ const app = require('../../../../api/src/index.js');
 
 const request = supertest(app);
 
+
+
 describe('GET /test', () => {
     test('responds with 200', async (done) => {
         try {
@@ -38,6 +40,7 @@ describe('GET /', () => {
 })
 */
 
+/*
 describe('GET /add', () => {
   test('respond with 200', async (done) => {
     try {
@@ -56,3 +59,4 @@ describe('GET /add', () => {
     }
   });
 })
+*/
