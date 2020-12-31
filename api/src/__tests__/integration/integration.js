@@ -14,7 +14,7 @@ describe('GET /test', () => {
         }
     })
 })
-
+/*
 describe('GET /', () => {
     it('responds', async (next) => {
         try {
@@ -36,6 +36,7 @@ describe('GET /', () => {
         }
     })
 })
+*/
 
 describe('GET /add', () => {
   test('respond with 200', async (done) => {
