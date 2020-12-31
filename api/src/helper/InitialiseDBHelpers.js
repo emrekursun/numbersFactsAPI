@@ -9,6 +9,7 @@ const func = {
             table.string('uuid');
             table.string('number');
             table.string('answer');
+            table.string('category')
             table.timestamps(true, true);
           })
           .then(async () => {
