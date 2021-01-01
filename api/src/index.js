@@ -64,6 +64,15 @@ app.post('/numbersPost', async (req, res) => {
 });
 
 
+app.get('/numbers/:uuid', async (req, res) => {
+  const result = await pg
+    .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .from('numbers')
+    .where({ uuid: req.params.uuid });
+  res.json({
+    res: result,
+  });
+});
 
 
 app.get('/join', async (req, res) => {
