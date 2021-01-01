@@ -3,7 +3,7 @@ const app = express()
 const bodyParser = require('body-parser');
 const md5 = require('md5');
 const jwtToken = require('jsontokens')
-
+const Helpers = require('./utils/helpers.js');
 
 
 const DatabaseHelper = require('./helper/DatabaseHelper');
@@ -33,6 +33,37 @@ app.use(
 app.get('/', (req, res) => {
   res.send('Hello World -- deployed again!')
 })
+
+app.get('/test', (req, res) => {
+  res.send('TEST');
+    res.sendStatus(400);
+  res.status(204).send();
+});
+
+app.get('/numbers', async (req, res) => {
+  const result = await pg
+    .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .from('numbers');
+  res.json({
+    res: result,
+  });
+});
+
+
+app.post('/numbersPost', async (req, res) => {
+  const uuid = Helpers.generateUUID();
+  const result = await pg
+
+    .table('numbers')
+    .insert({ uuid, number: `2`, answer: `Tweede nummer`, category: `nummer` })
+    .then((res) => {
+      return res;
+    });
+  // console.log(result);
+  res.send(result);
+});
+
+
 
 
 app.get('/join', async (req, res) => {
@@ -134,7 +165,7 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('number');
           table.string('answer');
-          table.integer('category');
+          table.string('category');
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -153,6 +184,7 @@ async function initialiseTables() {
           table.string('math');
           table.string('trivia');
           table.string('date');
+          table.string('category_name');
           table.timestamps(true, true);
         })
         .then(async () => {
