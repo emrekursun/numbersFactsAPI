@@ -74,6 +74,18 @@ app.get('/numbers/:uuid', async (req, res) => {
   });
 });
 
+//DELETE endpoint
+app.delete('/numbersDelete/:uuid', async (req, res) => {
+  const result = await pg
+    .table('numbers')
+    .where({ uuid: req.params.uuid})
+    .del(['id','uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .then((res) => {
+      return res;
+    });
+  console.log(result);
+  res.send(result);
+});
 
 app.get('/join', async (req, res) => {
   await DatabaseHelper
