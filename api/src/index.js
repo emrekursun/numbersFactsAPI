@@ -35,6 +35,10 @@ app.get('/test', (req, res) => {
   res.status(204).send();
 });
 
+/**  get all numbers record 
+ * @params 
+ * @returns get all records of that category
+ */
 app.get('/numbers', async (req, res) => {
   const result = await pg
     .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
@@ -44,7 +48,10 @@ app.get('/numbers', async (req, res) => {
   });
 });
 
-
+/**  post numbers to database
+ * @params 
+ * @returns post a record to numbers table
+ */
 app.post('/number', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const result = await pg
@@ -58,6 +65,10 @@ app.post('/number', async (req, res) => {
   res.send(result);
 });
 
+/**  get numbers record by uuid
+ * @params uuid
+ * @returns get all records of that uuid
+ */
 app.get('/number/:uuid', async (req, res) => {
   const result = await pg
     .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
@@ -70,12 +81,11 @@ app.get('/number/:uuid', async (req, res) => {
 
 //DELETE endpoint
 
-/**
-* 
-* @params:
-* @returns: 
-*/
 
+/**  delete numbers record by uuid
+ * @params uuid
+ * @returns delete all records of that category
+ */
 app.delete('/number/:uuid', async (req, res) => {
   const result = await pg
     .table('numbers')
@@ -88,7 +98,29 @@ app.delete('/number/:uuid', async (req, res) => {
   res.send(result);
 });
 
-//DELETE CATEGORY - DELETE EVERY RECORD
+
+/**  update numbers record by uuid
+ * @params uuid
+ * @returns returns a status of 200 when updated or status of 404 when error
+ */
+app.put('/number/:uuid', async (req, res) => {
+  const result = await pg
+  .table('numbers')
+  .where({ uuid: req.params.uuid})
+    .update({ number: `3`, answer: `derde nummer`, category: `nummer` })
+    .returning('*')
+    .then(function (result) {
+      console.log(result);
+      res.json(result);
+      res.status(200).send();
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+
 app.get('/join', async (req, res) => {
   await DatabaseHelper
     .table('items')
