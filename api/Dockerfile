@@ -12,8 +12,8 @@ WORKDIR /workdir
 RUN npm install --quiet || cat npm-debug.log
 
 
-ENV PORT=3001
+ENV PORT=3000
 
-EXPOSE 3001
+EXPOSE 3000
 
 CMD ["npm", "start"]
