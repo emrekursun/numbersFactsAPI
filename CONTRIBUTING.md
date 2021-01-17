@@ -1,15 +1,23 @@
+# Contributing NumbersFactsAPI
 
+When contributing to this repository, please first discuss the change you wish to make via issue,
+email, or any other method with the owner of this repository before making a change. 
 
-# Contributing guidelines
----
+Please note that I have a code of conduct: [Code of conduct guidelines for this project](https://github.com/emrekursun/numbersFactsAPI/blob/main/CODE-OF-CONDUCT.md), please follow it in all your interactions with the project
 
-// intro
+# Accepted Contributions
+You can contribute to NumbersFactsAPI by:
 
+- Reporting a bug
+- Discussing the current state of the code
+- Submitting a fix
+- Proposing new features
+- Becoming a maintainer
 
-VERWIJS OOK NAAR UW CODE OF CONDUCT
+If you wish to suggest a new feature, you do say by:
 
-
-
+* Open a feature request on github with a "enhancement" label
+* Declare why useful
 ## Report bugs
 
 * Open a ticket on github, with a bug tag
@@ -18,77 +26,49 @@ VERWIJS OOK NAAR UW CODE OF CONDUCT
 * Explain the setup
 * include the following
 
-
-
 ```
 OS: 
 Docker version: 
 Global npms: 
 npm version: 
 ```
-
 examples, of good and bad requests
 
 good: Getting error "" when trying to call endopoint
 what data sending
 
 Bad: endpoint does not work
-  
-
-
-## Suggest new features
-
-* Open a feature request on github with a "enhancement" label
-* Declare why usefull
-
 
 ## Guidelines for development
 
-explain how to setp the system for development
-env file adaption 
-  * DB dev
-  * VERBOSE 3
-  * ...
+- Fork the repo
+- Clone your fork
+- Afterwards, create your own branch
+- Open terminal and navigate to the api folder using `cd api`
+- Install every dependencies `npm install`
+- Build container `docker-compose build`
+- To get all the tables up and running `docker-compose up`
+- You can also use `npm run test`
 
-welke globals kunnen ze gebruiken
+But you first have to enable the integration folder.
 
-What kind of tests need to be there
+- First, go to `package.json`, then delete  `/src/__tests__/integration` inside of "testPathIgnorePatterns".
 
-Mention development DB
+If the steps above are followed and done, the tables `numbers` & `numbersCategory` will be created and be ready to execute queries. For viewing every records that the tables have, you can use <https://www.tableplus.com/>
 
-Changelog (how to)
-
-
-### (logging)
-
-```
-if(process.env.VERBOSE >= 2) {
-  console.log()
-}
-```
-
-expected log levels:
-| verbose level | code |
-| --- | --- |
-| 2 | console.log | 
-| 1 | console.warn | 
-| 0 | console.error |
-
-
-
+- Commit and push your changes to your branch
+- Create a pull request then merge.
 
 ## Roadmap and vision
 
-I envision....
+I envision that everyone can know more about numbers and their true meaning about: 
 
-// mention van een forum
-// Discord
-
+- Math
+- Trivia
+- Date
 
 ## Get in touch
 
-email
-discord -> 
-github -> label; "question"
+emre.kursun@student.ehb.be
 
 
