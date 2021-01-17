@@ -6,10 +6,6 @@ const jwtToken = require('jsontokens')
 const Helpers = require('./utils/helpers.js');
 
 
-/* const DatabaseHelper = require('./helper/DatabaseHelper'); */
-
-
-
 const pg = require('knex')({
   client: 'pg',
   version: '9.6',
@@ -136,7 +132,10 @@ if (process.env.NODE_ENV !== 'test') {
   app.listen(process.env.PORT || 3000, () => console.log(`Listening on port ${process.env.PORT || 3000}`));
 }
 
-
+/**  Creates the tables: numbers & numbersCategory
+ * @params 
+ * @returns table numbers and numbersCategory
+ */
 
 async function initialiseTables() {
   await pg.schema.hasTable('numbers').then(async (exists) => {
