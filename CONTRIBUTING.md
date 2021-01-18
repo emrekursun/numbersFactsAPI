@@ -59,6 +59,21 @@ If the steps above are followed and done, the tables `numbers` & `numbersCategor
 - Commit and push your changes to your branch
 - Create a pull request then merge.
 
+### (logging)
+
+```
+if(process.env.VERBOSE >= 2) {
+  console.log()
+}
+```
+
+expected log levels:
+| verbose level | code |
+| --- | --- |
+| 2 | console.log |
+| 1 | console.warn |
+| 0 | console.error |
+
 ## Roadmap and vision
 
 I envision that everyone can know more about numbers and their true meaning about: 
