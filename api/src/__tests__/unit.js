@@ -11,7 +11,7 @@ describe('helpers test', () => {
         expect(Helpers.checkingTitle('Triva Math Date categories')).toBeDefined();
       });
     test('number title entry must be a string', () => {
-        expect(Helpers.checkingTitle(33)).toBeFalsy();
+        expect(Helpers.checkingTitle(10)).toBeFalsy();
       });
 
     
