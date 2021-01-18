@@ -15,12 +15,12 @@ const Helpers = {
    */
 
   checkingTitle: (a) => {
-    if (a.length < 100 && typeof a === 'string') {
+    if (a.length < 30 && typeof a === 'string') {
       return a;
     } else {
       false;
     }
   },
 };
-// a.length < 4 &&
+
 module.exports = Helpers;

@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const app = require('../../../../api/src/index.js');
-
+const Helpers = require('../../utils/helpers.js')
 const request = supertest(app);
 
 
@@ -16,47 +16,29 @@ describe('GET /test', () => {
         }
     })
 })
-/*
-describe('GET /', () => {
-    it('responds', async (next) => {
-        try {
 
-            const response = await request.get('/')
-            expect(response.status).toBe(404, next());
-            expect(typeof response.body).toBe('object', next())
-        } catch (e) {
+describe('POST /number endpoint', () => {
+  let uuid = Helpers.generateUUID();
+  const numberRecord = [
+    {
+      uuid: uuid,
+      number: '2',
+      answer: 'Tweede nummer',
+      category: 'nummer'
+    },
+  ];
 
-        }
-    })
-
-    it('refuses', async (next) => {
-        try {
-            await expect(request.post('/')).toBe(200, next());
-            
-        } catch (e) {
-
-        }
-    })
-})
-*/
-
-/*
-describe('GET /add', () => {
-  test('respond with 200', async (done) => {
+  test('POST- /number endpoint', async (done) => {
     try {
-      await request
-        .get('/test')
-        .expect(404)
-        .then((res) => {
-          done();
-        });
-    } catch (e) {
-      if (e) {
-        console.log(e);
-        done(e);
-        done();
-      }
-    }
+      await request.post('/number').send(numberRecord).expect(201);
+      done();
+    } catch (error) {}
   });
-})
-*/
+  test('POST- /number endpoint send error if not working', async (done) => {
+    try {
+      const numbersPost = await request.post('/number');
+      expect(numbersPost.status).toBe(400);
+      done();
+    } catch (error) {}
+  });
+});
