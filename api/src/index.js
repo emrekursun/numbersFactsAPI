@@ -37,7 +37,7 @@ app.get('/test', (req, res) => {
  */
 app.get('/numbers', async (req, res) => {
   const result = await pg
-    .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .select(['uuid', 'number', 'category_name', 'answer', 'created_at','updated_at'])
     .from('numbers');
   res.json({
     res: result,
@@ -53,11 +53,33 @@ app.post('/number', async (req, res) => {
   const result = await pg
 
     .table('numbers')
-    .insert({ uuid, number: `2`, answer: `Tweede nummer`, category: `nummer` })
+    .insert({ uuid, number: `2`, answer: `Tweede nummer`, category_name: `trivia`, category_id: `2` })
     .then((res) => {
       return res;
     });
   // console.log(result);
+  res.send(result);
+});
+
+/**  
+ * post a new category
+ * @params 
+ * @returns post a new category record to numberscategory
+ */
+
+app.post('/category', async (req, res) => {
+  const uuid = Helpers.generateUUID();
+  
+  const result = await pg
+
+    .table('numberscategory')
+    .insert({ uuid, category_name: `math`, category_id: `1`})  
+    .returning('*')
+    .then((res) => {
+      return res;
+    });
+  console.log('added one table');
+  console.log(result);
   res.send(result);
 });
 
@@ -67,7 +89,7 @@ app.post('/number', async (req, res) => {
  */
 app.get('/number/:uuid', async (req, res) => {
   const result = await pg
-    .select(['uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .select(['uuid', 'number', 'category_name', 'answer', 'created_at','updated_at'])
     .from('numbers')
     .where({ uuid: req.params.uuid });
   res.json({
@@ -86,12 +108,43 @@ app.delete('/number/:uuid', async (req, res) => {
   const result = await pg
     .table('numbers')
     .where({ uuid: req.params.uuid})
-    .del(['id','uuid', 'number', 'category', 'answer', 'created_at','updated_at'])
+    .del(['id','uuid', 'number', 'category_name', 'category_id', 'join_category', 'answer', 'created_at','updated_at'])
     .then((res) => {
       return res;
     });
   console.log(result);
   res.send(result);
+});
+
+/**  delete a category - every record of that category will be deleted
+ * @params uuid
+ * @returns deletes all records of that category
+ */
+
+app.delete('/category/:category_name', async (req, res) => {
+  const result = await pg
+    .table('numberscategory')
+    .where('category_name', req.params.category_name)
+    .del(['id', 'uuid', 'category_name', 'category_id'])
+    .then((res) => {
+      return res; 
+    })
+
+  console.log('deleted record.');
+  console.log(result);
+  res.send(result);
+
+  await pg
+  .table('numbers')
+  .where('category_name', req.params.category_name)
+  .del(['id', 'uuid', 'number', 'answer','category_name', 'category_id','join_category', 'created_at','updated_at'])
+  .then((res) => {
+    return res; 
+  })
+
+console.log('deleted record.');
+console.log(result);
+res.send(result);
 });
 
 
@@ -103,7 +156,7 @@ app.put('/number/:uuid', async (req, res) => {
   const result = await pg
   .table('numbers')
   .where({ uuid: req.params.uuid})
-    .update({ number: `3`, answer: `derde nummer`, category: `nummer` })
+    .update({ number: `1`, answer: `uneven number`, category_name: `math`, category_id: '1' })
     .returning('*')
     .then(function (result) {
       console.log(result);
@@ -118,10 +171,10 @@ app.put('/number/:uuid', async (req, res) => {
 
 
 app.get('/join', async (req, res) => {
-  await DatabaseHelper
-    .table('items')
-    .join('lists', DatabaseHelper.raw('item.list_id::varchar'), DatabaseHelper.raw('lists.uuid::varchar'))
-    .select('lists.*', 'items.*')
+  await pg
+    .table('numbers')
+    .join('numberscategory', pg.raw('numbers.category_id::varchar'), pg.raw('numberscategory.uuid::varchar'))
+    .select('numberscategory.*', 'numbers.*')
     .then((data) => {
       res.send(data)
     })
@@ -129,7 +182,7 @@ app.get('/join', async (req, res) => {
 })
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(process.env.PORT || 3000, () => console.log(`Listening on port ${process.env.PORT || 3000}`));
+  app.listen(process.env.PORT || 3001, () => console.log(`Listening on port ${process.env.PORT || 3001}`));
 }
 
 /**  Creates the tables: numbers & numbersCategory
@@ -146,30 +199,46 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('number');
           table.string('answer');
-          table.string('category');
+          table.string('category_name');
+          table.string('category_id');
+          table.string('join_category');
           table.timestamps(true, true);
         })
-        .then(async () => {
+        .then(async () => { 
           console.log('created table numbers');
+          const uuid = Helpers.generateUUID();
+          console.log('create the records '); 
+          await pg.table('numbers').insert([ 
+            { uuid, number: `1`, answer: `uneven number`, category_name: `math`, category_id: '1' },
+            { uuid, number: `1`, answer: `first number`, category_name: `trivia`, category_id: '2' },
+            { uuid, number: `1`, answer: `first day of the month`, category_name: `date`, category_id: '3' },
+           
+          ]);
          
         });
 
     }
   });
-  await pg.schema.hasTable('numbersCategory').then(async (exists) => {
+  await pg.schema.hasTable('numberscategory').then(async (exists) => {
     if (!exists) {
       await pg.schema
-        .createTable('numbersCategory', (table) => {
+        .createTable('numberscategory', (table) => {
           table.increments().primary();
           table.uuid('uuid');
-          table.string('math');
-          table.string('trivia');
-          table.string('date');
           table.string('category_name');
+          table.string('category_id');
           table.timestamps(true, true);
         })
         .then(async () => {
-          console.log('created table numbersCategory');
+          console.log('created table numberscategory');
+          const uuid = Helpers.generateUUID();
+          console.log('created the categories ');
+          await pg.table('numberscategory').insert([
+            { uuid, category_name: `math`, category_id: '1' },
+            { uuid, category_name: `trivia`, category_id: '2' }, 
+            { uuid, category_name: `date`, category_id: '3' }, 
+
+          ]);
           
         });
 
